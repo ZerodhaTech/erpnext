@@ -105,11 +105,12 @@ class LoanSecurityUnpledge(Document):
 		if not security_value and flt(pending_principal_amount, 2) > 0:
 			self._throw(security_value, pending_principal_amount, ltv_ratio)
 
-		if security_value and flt(pending_principal_amount / security_value) * 100 > ltv_ratio:
-			self._throw(security_value, pending_principal_amount, ltv_ratio)
+		# if security_value and flt(pending_principal_amount / security_value) * 100 > ltv_ratio:
+		# 	self._throw(security_value, pending_principal_amount, ltv_ratio)
 
 	def _throw(self, security_value, pending_principal_amount, ltv_ratio):
-		msg = _("Loan Security Value after unpledge is {0}").format(frappe.bold(security_value))
+		msg = self.loan + " <br>"
+		msg += _("Loan Security Value after unpledge is {0}").format(frappe.bold(security_value))
 		msg += "<br>"
 		msg += _("Pending principal amount is {0}").format(frappe.bold(flt(pending_principal_amount, 2)))
 		msg += "<br>"

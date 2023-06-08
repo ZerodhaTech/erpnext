@@ -121,6 +121,10 @@ class Loan(AccountsController):
 			frappe.throw(_("Repay From Salary can be selected only for term loans"))
 
 	def make_repayment_schedule(self):
+		for term in reversed(self.repayment_schedule):
+			if not term.is_accrued:
+				self.remove(term)
+
 		if not self.repayment_start_date:
 			frappe.throw(_("Repayment Start Date is mandatory for term loans"))
 
@@ -131,14 +135,16 @@ class Loan(AccountsController):
 		self.repayment_schedule = []
 		payment_date = self.repayment_start_date
 		balance_amount = self.loan_amount
-
+		first = True
 		while balance_amount > 0:
 			interest_amount, principal_amount, balance_amount, total_payment = self.get_amounts(
 				payment_date,
 				balance_amount,
 				schedule_type_details.repayment_schedule_type,
 				schedule_type_details.repayment_date_on,
+				first
 			)
+			first = False
 
 			if schedule_type_details.repayment_schedule_type == "Pro-rated calendar months":
 				next_payment_date = get_last_day(payment_date)
@@ -158,7 +164,7 @@ class Loan(AccountsController):
 				next_payment_date = add_single_month(payment_date)
 				payment_date = next_payment_date
 
-	def get_amounts(self, payment_date, balance_amount, schedule_type, repayment_date_on):
+	def get_amounts(self, payment_date, balance_amount, schedule_type, repayment_date_on, first):
 		if schedule_type == "Monthly as per repayment start date":
 			days = 1
 			months = 12
@@ -167,12 +173,13 @@ class Loan(AccountsController):
 			if repayment_date_on == "Start of the next month":
 				expected_payment_date = add_days(expected_payment_date, 1)
 
-			if expected_payment_date == payment_date:
+			if expected_payment_date == payment_date and not first:
 				# using 30 days for calculating interest for all full months
 				days = 30
 				months = 365
 			else:
 				days = date_diff(get_last_day(payment_date), payment_date)
+				print(days)
 				months = 365
 
 		interest_amount = flt(balance_amount * flt(self.rate_of_interest) * days / (months * 100))
