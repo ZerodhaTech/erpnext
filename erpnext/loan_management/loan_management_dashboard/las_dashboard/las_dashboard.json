@@ -1,0 +1,84 @@
+{
+ "cards": [
+  {
+   "card": "ONBOARDING PENDING"
+  },
+  {
+   "card": "ELIGIBILITY_SUCCESS"
+  },
+  {
+   "card": "PLEDGE SUCCESS"
+  },
+  {
+   "card": "Loans to Close"
+  },
+  {
+   "card": "Amount to Disburse"
+  },
+  {
+   "card": "New loans-1"
+  },
+  {
+   "card": "Active Loans"
+  },
+  {
+   "card": "Closed Loans"
+  },
+  {
+   "card": "Total Disbursed"
+  },
+  {
+   "card": "Total Repayment"
+  },
+  {
+   "card": "Open Loan Applications"
+  },
+  {
+   "card": "New Loan Applications"
+  },
+  {
+   "card": "Total Sanctioned Amount"
+  },
+  {
+   "card": "Active Securities"
+  },
+  {
+   "card": "Applicants With Unpaid Shortfall"
+  },
+  {
+   "card": "Total Shortfall Amount"
+  },
+  {
+   "card": "Total Write Off"
+  },
+  {
+   "card": "Total Outstanding"
+  }
+ ],
+ "charts": [
+  {
+   "chart": "New Loans",
+   "width": "Half"
+  },
+  {
+   "chart": "Loan Disbursements",
+   "width": "Half"
+  },
+  {
+   "chart": "Loan Interest Accrual",
+   "width": "Half"
+  }
+ ],
+ "creation": "2023-07-26 17:13:59.727731",
+ "dashboard_name": "LAS Dashboard",
+ "docstatus": 0,
+ "doctype": "Dashboard",
+ "idx": 0,
+ "is_default": 0,
+ "is_standard": 1,
+ "modified": "2023-07-26 17:19:16.090613",
+ "modified_by": "abhinav.raut@zerodha.com",
+ "module": "Loan Management",
+ "name": "LAS Dashboard",
+ "owner": "Administrator"
+}
