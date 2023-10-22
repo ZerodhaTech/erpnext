@@ -4,7 +4,7 @@
 
 import frappe
 from frappe.model.document import Document
-from frappe.utils import flt, get_datetime
+from frappe.utils import flt, get_datetime, getdate
 
 from erpnext.loan_management.doctype.loan_security_unpledge.loan_security_unpledge import (
 	get_pledged_security_qty,
@@ -61,6 +61,9 @@ def add_security(loan):
 
 
 def check_for_ltv_shortfall(process_loan_security_shortfall):
+	from erpnext.loan_management.doctype.loan_repayment.loan_repayment import (
+		calculate_amounts,
+	)
 
 	update_time = get_datetime()
 
@@ -77,12 +80,6 @@ def check_for_ltv_shortfall(process_loan_security_shortfall):
 		"Loan",
 		fields=[
 			"name",
-			"loan_amount",
-			"total_principal_paid",
-			"total_payment",
-			"total_interest_payable",
-			"disbursed_amount",
-			"status",
 		],
 		filters={"status": ("in", ["Disbursed", "Partially Disbursed"]), "is_secured_loan": 1},
 	)
@@ -96,14 +93,9 @@ def check_for_ltv_shortfall(process_loan_security_shortfall):
 	loan_security_map = {}
 
 	for loan in loans:
-		if loan.status == "Disbursed":
-			outstanding_amount = (
-				flt(loan.total_payment) - flt(loan.total_interest_payable) - flt(loan.total_principal_paid)
-			)
-		else:
-			outstanding_amount = (
-				flt(loan.disbursed_amount) - flt(loan.total_interest_payable) - flt(loan.total_principal_paid)
-			)
+		amounts = calculate_amounts(loan.name, getdate())
+  
+		outstanding_amount = amounts["pending_principal_amount"] + amounts["interest_amount"] + amounts["penalty_amount"]
 
 		pledged_securities = get_pledged_security_qty(loan.name)
 		ltv_ratio = 0.0
