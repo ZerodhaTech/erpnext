@@ -3,7 +3,7 @@
 
 import frappe
 from frappe import _
-from frappe.utils import getdate
+from frappe.utils import getdate, flt
 
 import erpnext
 from erpnext.accounts.general_ledger import make_gl_entries
@@ -28,7 +28,7 @@ class LoanRefund(AccountsController):
 
 	def validate_refund_amount(self):
 		loan = frappe.get_doc("Loan", self.loan)
-		pending_amount = get_pending_principal_amount(loan)
+		pending_amount = flt(get_pending_principal_amount(loan), 2)
 		if pending_amount >= 0:
 			frappe.throw(_("No excess amount to refund."))
 		else:
