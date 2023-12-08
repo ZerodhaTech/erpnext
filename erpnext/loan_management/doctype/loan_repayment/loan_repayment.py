@@ -72,7 +72,8 @@ class LoanRepayment(AccountsController):
 		shortfall_amount = flt(
 			frappe.db.get_value(
 				"Loan Security Shortfall", {"loan": self.against_loan, "status": "Pending"}, "shortfall_amount"
-			)
+			),
+			precision,
 		)
 
 		if shortfall_amount:
