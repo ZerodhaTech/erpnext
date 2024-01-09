@@ -731,7 +731,7 @@ def get_amounts(amounts, against_loan, posting_date):
 	if pending_days > 0:
 		principal_amount = flt(pending_principal_amount, precision)
 		per_day_interest = get_per_day_interest(
-			principal_amount, loan_type_details.rate_of_interest, posting_date
+			principal_amount, against_loan_doc.rate_of_interest, posting_date
 		)
 		unaccrued_interest += pending_days * per_day_interest
 
