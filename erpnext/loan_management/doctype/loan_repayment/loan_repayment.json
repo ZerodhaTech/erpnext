@@ -231,7 +231,7 @@
    "read_only": 1
   },
   {
-   "fetch_from": "loan_type.rate_of_interest",
+   "fetch_from": "against_loan.rate_of_interest",
    "fieldname": "rate_of_interest",
    "fieldtype": "Percent",
    "label": "Rate Of Interest",
