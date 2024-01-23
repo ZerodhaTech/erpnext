@@ -134,9 +134,14 @@ def calculate_accrual_amount_for_demand_loans(
 	# For accrual type of loan disbursement, allow loan interest accrual voucher of Zero amount,
 	# Without this the last accrual date will be incorrect & some extra interest will be accrued.
 	if accrual_type == "Disbursement":
+		# Set amounts to zero if payable interest is less than or equal to zero
 		if payable_interest <= 0:
 			payable_interest = 0
 			args.update({"interest_amount": payable_interest})
+
+		if args["total_pending_interest_amount"] <= 0:
+			args.update({"total_pending_interest_amount": 0})
+
 		make_loan_interest_accrual_entry(args)
 		return
 
