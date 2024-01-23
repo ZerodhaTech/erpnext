@@ -18,8 +18,11 @@ class LoanInterestAccrual(AccountsController):
 		if not self.posting_date:
 			self.posting_date = nowdate()
 
-		if not self.interest_amount and not self.payable_principal_amount:
-			frappe.throw(_("Interest Amount or Principal Amount is mandatory"))
+		# For accrual type of loan disbursement, allow loan interest accrual voucher of Zero amount,
+		# Without this the last accrual date will be incorrect & some extra interest will be accrued.
+		if self.accrual_type != "Disbursement":
+			if not self.interest_amount and not self.payable_principal_amount:
+				frappe.throw(_("Interest Amount or Principal Amount is mandatory"))
 
 		if not self.last_accrual_date:
 			self.last_accrual_date = get_last_accrual_date(self.loan, self.posting_date)
@@ -127,6 +130,12 @@ def calculate_accrual_amount_for_demand_loans(
 			"accrual_type": accrual_type,
 		}
 	)
+
+	# For accrual type of loan disbursement, allow loan interest accrual voucher of Zero amount,
+	# Without this the last accrual date will be incorrect & some extra interest will be accrued.
+	if accrual_type == "Disbursement":
+		make_loan_interest_accrual_entry(args)
+		return
 
 	if flt(payable_interest, precision) > 0.0:
 		make_loan_interest_accrual_entry(args)
