@@ -723,10 +723,10 @@ def get_amounts(amounts, against_loan, posting_date):
 
 	unaccrued_interest = 0
 	if due_date:
-		pending_days = date_diff(posting_date, due_date) + 1
+		pending_days = date_diff(posting_date, due_date)
 	else:
 		last_accrual_date = get_last_accrual_date(against_loan_doc.name, posting_date)
-		pending_days = date_diff(posting_date, last_accrual_date) + 1
+		pending_days = date_diff(posting_date, last_accrual_date)
 
 	if pending_days > 0:
 		principal_amount = flt(pending_principal_amount, precision)
