@@ -112,7 +112,10 @@ def calculate_accrual_amount_for_demand_loans(
 	)
 	payable_interest = interest_per_day * no_of_days
 
-	pending_amounts = calculate_amounts(loan.name, posting_date, payment_type="Loan Closure")
+	pending_amounts = calculate_amounts(loan.name, posting_date)
+	
+	# Total pending interest amount is the sum of *accrued* pending interest amount and unaccrued payable interest (calculated above).
+	total_pending_interest_amount = pending_amounts["interest_amount"] + payable_interest
 
 	args = frappe._dict(
 		{
@@ -123,7 +126,7 @@ def calculate_accrual_amount_for_demand_loans(
 			"loan_account": loan.loan_account,
 			"pending_principal_amount": pending_principal_amount,
 			"interest_amount": payable_interest,
-			"total_pending_interest_amount": pending_amounts["interest_amount"],
+			"total_pending_interest_amount": total_pending_interest_amount,
 			"penalty_amount": pending_amounts["penalty_amount"],
 			"process_loan_interest": process_loan_interest,
 			"posting_date": posting_date,
