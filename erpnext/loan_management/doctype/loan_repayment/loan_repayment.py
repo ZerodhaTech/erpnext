@@ -611,9 +611,10 @@ def regenerate_repayment_schedule(loan, cancel=0):
 			balance_amount = last_balance_amount
 
 	payment_date = next_accrual_date
+	is_first_month = True
 
 	while balance_amount > 0:
-		interest_amount = flt(balance_amount * flt(loan_doc.rate_of_interest) / (12 * 100))
+		interest_amount = 0 if is_first_month else flt(balance_amount * flt(loan_doc.rate_of_interest) / (12 * 100))
 		principal_amount = monthly_repayment_amount - interest_amount
 		balance_amount = flt(balance_amount + interest_amount - monthly_repayment_amount)
 		if balance_amount < 0:
@@ -631,6 +632,7 @@ def regenerate_repayment_schedule(loan, cancel=0):
 				"balance_loan_amount": balance_amount,
 			},
 		)
+		is_first_month = False
 		next_payment_date = add_single_month(payment_date)
 		payment_date = next_payment_date
 
