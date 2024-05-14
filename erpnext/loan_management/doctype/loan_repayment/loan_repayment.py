@@ -580,12 +580,14 @@ def regenerate_repayment_schedule(loan, cancel=0):
 	accrued_entries = 0
 	last_repayment_amount = 0
 	last_balance_amount = 0
+	is_first_month = True
 
 	for term in reversed(loan_doc.get("repayment_schedule")):
 		if not term.is_accrued:
 			next_accrual_date = term.payment_date
 			loan_doc.remove(term)
 		else:
+			is_first_month = False
 			accrued_entries += 1
 			if not last_repayment_amount:
 				last_repayment_amount = term.total_payment
@@ -611,7 +613,6 @@ def regenerate_repayment_schedule(loan, cancel=0):
 			balance_amount = last_balance_amount
 
 	payment_date = next_accrual_date
-	is_first_month = True
 
 	while balance_amount > 0:
 		interest_amount = 0 if is_first_month else flt(balance_amount * flt(loan_doc.rate_of_interest) / (12 * 100))
