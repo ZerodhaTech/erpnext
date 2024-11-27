@@ -297,7 +297,7 @@ def get_total_loan_amount(applicant_type, applicant, company):
 			"company": company,
 			"applicant": applicant,
 			"docstatus": 1,
-			"status": ("!=", "Closed"),
+			"status": ("not in", ["Closed", "Sanctioned"]),
 		},
 		fields=[
 			"status",
